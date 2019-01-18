@@ -53,7 +53,7 @@ Please submit your code challenge by 11:59 PM on Sunday, January 20th.
 - Branch off master and commit all of your assets to this branch
 - Create a pull request from your branch to master tagging ​`bgarrett-rt​` and `t​ommyoneill​` as
 reviewers to the pull request.
-- Please include in your final set of commits a R`​EADME.md​` file describing the approach you
+- Please include in your final set of commits a `README.md​` file describing the approach you
 took as well as any of the “bonus criteria” you implemented.
 - Note: We will pull down your branch and run locally so if there are any special installation
 steps, make note of them in the `README.md​` - otherwise we’ll assume we just install the app via ​`npm install​` and run it ​via `npm start`
