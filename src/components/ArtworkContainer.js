@@ -3,6 +3,7 @@ import React from 'react';
 import getRandomArtworks from '../services/miaCollection';
 import ArtworkGrid from './ArtworkGrid';
 
+// TODO: Figure out whether this is more consistent than the URL in `formatArtwork`
 const artworkUrl = ({ id, size = 400 }) => {
   console.log(typeof id);
   let sizeParam;
@@ -13,18 +14,20 @@ const artworkUrl = ({ id, size = 400 }) => {
   }
 
   return `https://${id % 7}.api.artsmia.org/${sizeParam}${id}.jpg`;
-  // return `http://api.artsmia.org/images/${id}/small.jpg`;
 };
 
 function formatArtwork(data) {
   return data.map((artwork) => {
-    const { id, title, artist } = artwork;
+    const {
+      id, title, artist, medium
+    } = artwork;
 
     return {
       id,
       title,
       artist,
-      img: artworkUrl({ id })
+      medium,
+      img: `http://api.artsmia.org/images/${id}/small.jpg`
     };
   });
 }
@@ -36,9 +39,18 @@ export default class ArtworkContainer extends React.Component {
   };
 
   componentDidMount() {
-    getRandomArtworks().then((res) => {
-      this.setState({ loading: false, artworks: formatArtwork(res) });
-    });
+    const cachedArtwork = localStorage.getItem('artwork');
+
+    if (cachedArtwork) {
+      this.setState({ loading: false, artworks: JSON.parse(cachedArtwork) });
+    } else {
+      getRandomArtworks().then((res) => {
+        const formattedArtwork = formatArtwork(res);
+
+        localStorage.setItem('artwork', JSON.stringify(formattedArtwork));
+        this.setState({ loading: false, artworks: formattedArtwork });
+      });
+    }
   }
 
   render() {
@@ -47,7 +59,7 @@ export default class ArtworkContainer extends React.Component {
     return loading ? (
       <div>Loading</div>
     ) : (
-      <ArtworkGrid artwork={artworks} />
+      <ArtworkGrid artworks={artworks} />
     );
   }
 }
